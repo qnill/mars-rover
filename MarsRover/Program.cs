@@ -1,107 +1,100 @@
-﻿using System;
+﻿using MarsRover.Const;
+using MarsRover.Dtos;
+using MarsRover.Helper;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MarsRover
 {
-    public class Rover
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public string Heading { get; set; }
-        public string Location { get; set; }
-    }
-
     class Program
     {
-        private static readonly string[] _headings = new string[] { "N", "E", "S", "W" };
-
-        private static (int x, int y) Move(int x, int y, int headingIndex)
+        private static RoverCoordinateDto Move(RoverCoordinateDto coordinate)
         {
-            switch (_headings[headingIndex])
+            switch (coordinate.Heading)
             {
-                case "N":
-                    y++;
+                case Headings.HeadingType.N:
+                    coordinate.Y++;
                     break;
-                case "E":
-                    x++;
+                case Headings.HeadingType.E:
+                    coordinate.X++;
                     break;
-                case "S":
-                    y--;
+                case Headings.HeadingType.S:
+                    coordinate.Y--;
                     break;
-                case "W":
-                    x--;
+                case Headings.HeadingType.W:
+                    coordinate.X--;
                     break;
             }
 
-            return (x, y);
+            return coordinate;
         }
 
-        private static string RotatePosition(Rover rover)
+        private static IList<RoverDto> RotatePosition(IList<RoverDto> rovers)
         {
-            int headingIndex = Array.FindIndex(_headings, row => row == rover.Heading);
-            if (headingIndex == -1)
-                return null; /*Send Error*/
+            var headings = Headings.ToDictionary();
 
-            var spins = rover.Location.ToCharArray();
-            foreach (var spin in spins)
+            foreach (var rover in rovers)
             {
-                if (spin == char.Parse("L"))
+                byte? headingIndex = headings.Where(x => x.Value == rover.Coordinate.Heading.ToString()).Select(s => s.Key).FirstOrDefault();
+                if (headingIndex == null)
+                    return null; /*Send Error*/
+
+                foreach (var instruction in rover.ExplorationInstructions)
                 {
-                    headingIndex--;
-                    if (headingIndex == -1)
-                        headingIndex = _headings.Length - 1;
-                }
-                else if (spin == char.Parse("R"))
-                {
-                    headingIndex++;
-                    if (headingIndex > _headings.Length - 1)
-                        headingIndex = 0;
-                }
-                else
-                {
-                    (rover.X, rover.Y) = Move(rover.X, rover.Y, headingIndex);
+                    if (instruction == Routes.RouteType.L)
+                    {
+                        headingIndex--;
+                        if (headingIndex < headings.Min(mn => mn.Key))
+                            headingIndex = headings.Max(mx => mx.Key);
+                    }
+                    else if (instruction == Routes.RouteType.R)
+                    {
+                        headingIndex++;
+                        if (headingIndex > headings.Max(mx => mx.Key))
+                            headingIndex = headings.Min(mn => mn.Key);
+                    }
+                    else if (instruction == Routes.RouteType.M)
+                    {
+                        rover.Coordinate.Heading = (Headings.HeadingType)headingIndex;
+                        Move(rover.Coordinate);
+                    }
                 }
             }
 
-            var result = $"{rover.X} {rover.Y} {_headings[headingIndex]}";
-            return result;
+            return rovers;
         }
 
         static void Main()
         {
-            Console.WriteLine("Executing...");
+            Console.Write("upper-right coordinates: ");
+            string upperRightCoordinates = Console.ReadLine();
 
-            string range = "5 5";
+            List<RoverDto> rovers = new();
+            bool addMoreRover = true;
+            while (addMoreRover)
+            {
+                RoverDto rover = new();
 
-            var rovers = new List<Rover>
+                Console.Write("rover coordinate: ");
+                string coordinate = Console.ReadLine();
+                rover.Coordinate = RoverDataConvert.Coordinate(coordinate);
+
+                Console.Write("rover exploration instructions: ");
+                string explorationInstructions = Console.ReadLine();
+                rover.ExplorationInstructions = RoverDataConvert.ExplorationInstructions(explorationInstructions);
+
+                rovers.Add(rover);
+
+                Console.Write("Do you want to add another rover? (Y/n): ");
+                string addMoreRoverAnswer = Console.ReadLine();
+                addMoreRover = addMoreRoverAnswer.ToUpper() == "Y" || addMoreRoverAnswer == string.Empty;
+            }
+
+            foreach (var rover in RotatePosition(rovers))
             {
-                new Rover
-                {
-                    X = 1,
-                    Y = 2,
-                    Heading = "N",
-                    Location = "LMLMLMLMM"
-                },
-                new Rover
-                {
-                    X = 3,
-                    Y = 3,
-                    Heading = "E",
-                    Location = "MMRMMRMRRM"
-                },
-                new Rover
-                {
-                    X = 3,
-                    Y = 5,
-                    Heading = "S",
-                    Location = "LMMRMRRML"
-                }
-            };
-            
-            foreach (var rover in rovers)
-            {
-                var newPosition = RotatePosition(rover);
-                Console.WriteLine(newPosition);
+                string coordinate = $"{rover.Coordinate.X} {rover.Coordinate.Y} {rover.Coordinate.Heading}";
+                Console.WriteLine(coordinate);
             }
         }
     }
