@@ -12,6 +12,13 @@ namespace MarsRover
             Console.Write("upper-right coordinates: ");
             string upperRightCoordinates = Console.ReadLine();
 
+            var (plateau, plateauMessage) = RoverInputConverter.Plateau(upperRightCoordinates);
+            if (plateauMessage != null)
+            {
+                Console.WriteLine(plateauMessage);
+                return;
+            }
+
             int roverId = 1;
             IList<(int roverId, string coordinate, string moveInstructions)> inputs = new List<(int, string, string)>();
 
@@ -32,7 +39,7 @@ namespace MarsRover
                 addMoreRover = addMoreRoverAnswer.ToUpper() == "Y" || addMoreRoverAnswer == string.Empty;
             }
 
-            var rovers = RoverInputConverter.Set(inputs);
+            var rovers = RoverInputConverter.Set(plateau, inputs);
 
             Console.WriteLine("\n-----Result-----");
 

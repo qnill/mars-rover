@@ -64,10 +64,31 @@ namespace MarsRover.Services
         }
 
         /// <summary>
+        /// Parses the string upper right coordinates input to <see cref="PlateauDto"/>.
+        /// </summary>
+        /// <param name="inputUpperRightCoordinates"></param>
+        public static (PlateauDto plateau, string message) Plateau(string inputUpperRightCoordinates)
+        {
+            PlateauDto plateau = new();
+
+            var upperRightCoordinates = inputUpperRightCoordinates.Split(" ");
+            if (upperRightCoordinates == null || upperRightCoordinates.Length != 2)
+                return (null, ResultMessages.RoverInputConvert.RIE0008);
+
+            if (!Regex.IsMatch(upperRightCoordinates[0], "^[0-9]*$") || !Regex.IsMatch(upperRightCoordinates[1], "^[0-9]*$"))
+                return (null, ResultMessages.RoverInputConvert.RIE0009);
+
+            plateau.UpperRightX = Convert.ToInt32(upperRightCoordinates[0]);
+            plateau.UpperRightY = Convert.ToInt32(upperRightCoordinates[1]);
+
+            return (plateau, null);
+        }
+
+        /// <summary>
         /// Parses the string rover input to <see cref="RoverDto"/>
         /// </summary>
-        /// <param name="inputMoveInstructions"></param>
-        public static IList<RoverDto> Set(IList<(int roverId, string inputCoordinate, string inputMoveInstructions)> inputs)
+        /// <param name="inputs"></param>
+        public static IList<RoverDto> Set(PlateauDto plateau, IList<(int roverId, string inputCoordinate, string inputMoveInstructions)> inputs)
         {
             List<RoverDto> rovers = new();
 
@@ -80,7 +101,17 @@ namespace MarsRover.Services
 
                 (rover.Coordinate, rover.Message) = Coordinate(inputCoordinate);
                 if (rover.Message == null)
+                {
                     (rover.MoveInstructions, rover.Message) = MoveInstructions(inputMoveInstructions);
+
+                    // Checks if these coordinates are within the plateau.
+                    if (rover.Coordinate.X > plateau.UpperRightX || rover.Coordinate.Y > plateau.UpperRightY)
+                        rover.Message = ResultMessages.RoverInputConvert.RIE0006;
+
+                    // Checks if there are any more rovers added to these coordinates.
+                    if (rovers.Any(a => a.Coordinate.X == rover.Coordinate.X && a.Coordinate.Y == rover.Coordinate.Y))
+                        rover.Message = ResultMessages.RoverInputConvert.RIE0007;
+                }
 
                 rover.Success = rover.Message == null;
                 rovers.Add(rover);

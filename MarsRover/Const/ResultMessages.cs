@@ -34,6 +34,39 @@
             /// The move instruction could not find.
             /// </summary>
             internal const string RIE0005 = "RIE0005-The move instruction could not find.";
+
+            /// <summary>
+            /// The entered coordinates are outside of the range.
+            /// </summary>
+            internal const string RIE0006 = "RIE0006-The entered coordinates are outside of the range.";
+
+            /// <summary>
+            /// Another rover has already been added to this coordinates.
+            /// </summary>
+            internal const string RIE0007 = "RIE0007-Another rover has already been added to this coordinates.";
+
+            /// <summary>
+            /// Upper-right coordinates is wrong.
+            /// </summary>
+            internal const string RIE0008 = "RIE0008-Upper-right coordinates is wrong.";
+
+            /// <summary>
+            /// Upper-right coordinates data must be numbers only.
+            /// </summary>
+            internal const string RIE0009 = "RIE0009-Upper-right coordinates data must be numbers only.";
+        }
+
+        internal static class RoverExploration
+        {
+            /// <summary>
+            /// The rover unable to move as it reaches the range. Final position: {0}.
+            /// </summary>
+            internal const string REE0001 = "REE0001-The rover unable to move as it reaches the range. Final position: {0}.";
+
+            /// <summary>
+            /// Rover could not move because another rover at the target coordinates. Final position: {0}.
+            /// </summary>
+            internal const string REE0002 = "REE0002-Rover could not move because another rover at the target coordinates. Final position: {0}.";
         }
     }
 }
