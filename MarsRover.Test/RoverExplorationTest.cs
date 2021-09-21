@@ -40,5 +40,40 @@ namespace MarsRover.Test
             Assert.Equal(3, rover.Coordinate.Y);
             Assert.Equal(HeadingType.N, rover.Coordinate.Heading);
         }
+
+        [Fact]
+        public void DrawSquare()
+        {
+            var rover = new RoverDto
+            {
+                Coordinate = new RoverCoordinateDto
+                {
+                    X = 3,
+                    Y = 2,
+                    Heading = HeadingType.E
+                },
+                MoveInstructions = new MoveInstructionType[]
+                {
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.L,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.L,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.L,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.L
+                }
+            };
+
+            RoverExploration.Discover(new List<RoverDto>() { rover });
+
+            Assert.Equal(3, rover.Coordinate.X);
+            Assert.Equal(2, rover.Coordinate.Y);
+            Assert.Equal(HeadingType.E, rover.Coordinate.Heading);
+        }
     }
 }
