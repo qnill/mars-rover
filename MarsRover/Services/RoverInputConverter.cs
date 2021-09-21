@@ -1,6 +1,7 @@
 ﻿using MarsRover.Const;
 using MarsRover.Dtos;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -66,21 +67,26 @@ namespace MarsRover.Services
         /// Parses the string rover input to <see cref="RoverDto"/>
         /// </summary>
         /// <param name="inputMoveInstructions"></param>
-        public static RoverDto Set(string inputCoordinate, string inputMoveInstructions)
+        public static IList<RoverDto> Set(IList<(int roverId, string inputCoordinate, string inputMoveInstructions)> inputs)
         {
-            RoverDto rover = new()
+            List<RoverDto> rovers = new();
+
+            foreach (var (roverId, inputCoordinate, inputMoveInstructions) in inputs)
             {
-                Success = false
-            };
+                RoverDto rover = new()
+                {
+                    Id = roverId
+                };
 
-            (rover.Coordinate, rover.Message) = Coordinate(inputCoordinate);
-            if (rover.Message != null)
-                return rover;
+                (rover.Coordinate, rover.Message) = Coordinate(inputCoordinate);
+                if (rover.Message == null)
+                    (rover.MoveInstructions, rover.Message) = MoveInstructions(inputMoveInstructions);
 
-            (rover.MoveInstructions, rover.Message) = MoveInstructions(inputMoveInstructions);
+                rover.Success = rover.Message == null;
+                rovers.Add(rover);
+            }
 
-            rover.Success = rover.Message == null;
-            return rover;
+            return rovers;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using MarsRover.Dtos;
-using MarsRover.Services;
+﻿using MarsRover.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +12,9 @@ namespace MarsRover
             Console.Write("upper-right coordinates: ");
             string upperRightCoordinates = Console.ReadLine();
 
-            List<RoverDto> rovers = new();
             int roverId = 1;
+            IList<(int roverId, string coordinate, string moveInstructions)> inputs = new List<(int, string, string)>();
+
             bool addMoreRover = true;
             while (addMoreRover)
             {
@@ -24,15 +24,15 @@ namespace MarsRover
                 Console.Write($"rover-{roverId} exploration instructions: ");
                 string moveInstructions = Console.ReadLine();
 
-                RoverDto rover = RoverInputConverter.Set(startCoordinate, moveInstructions);
-                rover.Id = roverId;
-                rovers.Add(rover);
+                inputs.Add((roverId, startCoordinate, moveInstructions));
                 roverId++;
 
                 Console.Write("Do you want to add another rover? (Y/n): ");
                 string addMoreRoverAnswer = Console.ReadLine();
                 addMoreRover = addMoreRoverAnswer.ToUpper() == "Y" || addMoreRoverAnswer == string.Empty;
             }
+
+            var rovers = RoverInputConverter.Set(inputs);
 
             Console.WriteLine("\n-----Result-----");
 
