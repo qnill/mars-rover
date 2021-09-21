@@ -18,13 +18,13 @@ namespace MarsRover
             {
                 RoverDto rover = new();
 
-                Console.Write("rover coordinate: ");
-                string coordinate = Console.ReadLine();
-                rover.Coordinate = RoverDataConvert.Coordinate(coordinate);
+                Console.Write("rover start coordinate: ");
+                string startCoordinate = Console.ReadLine();
+                rover.Coordinate = RoverInputConverter.Coordinate(startCoordinate);
 
                 Console.Write("rover exploration instructions: ");
-                string explorationInstructions = Console.ReadLine();
-                rover.ExplorationInstructions = RoverDataConvert.ExplorationInstructions(explorationInstructions);
+                string moveInstructions = Console.ReadLine();
+                rover.MoveInstructions = RoverInputConverter.MoveInstructions(moveInstructions);
 
                 rovers.Add(rover);
 
@@ -33,10 +33,11 @@ namespace MarsRover
                 addMoreRover = addMoreRoverAnswer.ToUpper() == "Y" || addMoreRoverAnswer == string.Empty;
             }
 
-            foreach (var rover in RoverExploration.Discover(rovers))
+            RoverExploration.Discover(rovers);
+            foreach (var rover in rovers)
             {
-                string coordinate = $"{rover.Coordinate.X} {rover.Coordinate.Y} {rover.Coordinate.Heading}";
-                Console.WriteLine(coordinate);
+                string lastCoordinate = $"{rover.Coordinate.X} {rover.Coordinate.Y} {rover.Coordinate.Heading}";
+                Console.WriteLine(lastCoordinate);
             }
         }
     }

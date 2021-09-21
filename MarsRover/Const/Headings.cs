@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MarsRover.Const
 {
@@ -8,23 +6,15 @@ namespace MarsRover.Const
     {
         public enum HeadingType : byte
         {
-            N = 1,
-            E = 2,
-            S = 3,
-            W = 4
+            N = 0,
+            E = 1,
+            S = 2,
+            W = 3
         }
 
         public static string[] ToArray()
         {
             return Enum.GetNames(typeof(HeadingType));
-        }
-
-        public static Dictionary<byte, string> ToDictionary()
-        {
-            return Enum
-                .GetValues(typeof(HeadingType))
-                .Cast<HeadingType>()
-                .ToDictionary(t => (byte)t, t => t.ToString());
         }
     }
 }

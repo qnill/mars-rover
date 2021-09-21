@@ -1,13 +1,16 @@
 ﻿using MarsRover.Const;
 using MarsRover.Dtos;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MarsRover.Services
 {
-    public static class RoverExploration
+    public class RoverExploration
     {
-        private static RoverCoordinateDto Move(RoverCoordinateDto coordinate)
+        /// <summary>
+        /// Rover, moves in the heading it has.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        private static void Move(RoverCoordinateDto coordinate)
         {
             switch (coordinate.Heading)
             {
@@ -24,43 +27,38 @@ namespace MarsRover.Services
                     coordinate.X--;
                     break;
             }
-
-            return coordinate;
         }
 
-        public static IList<RoverDto> Discover(IList<RoverDto> rovers)
+        /// <summary>
+        /// Moves rovers for exploration.
+        /// </summary>
+        /// <param name="rovers"></param>
+        public static void Discover(IList<RoverDto> rovers)
         {
-            var headings = Headings.ToDictionary();
+            int headingLength = Headings.ToArray().Length;
 
             foreach (var rover in rovers)
             {
-                byte? headingIndex = headings.Where(x => x.Value == rover.Coordinate.Heading.ToString()).Select(s => s.Key).FirstOrDefault();
-                if (headingIndex == null)
-                    return null; /*Send Error*/
+                int headingIndex = (int)rover.Coordinate.Heading;
 
-                foreach (var instruction in rover.ExplorationInstructions)
+                // For new heading, when the rotation instructions comes the index value of heading array is change +/- 1.
+                // When the move instructions comes, call move service with the new coordinate value.
+                foreach (var instruction in rover.MoveInstructions)
                 {
-                    if (instruction == Routes.RouteType.L)
-                    {
-                        headingIndex--;
-                        if (headingIndex < headings.Min(mn => mn.Key))
-                            headingIndex = headings.Max(mx => mx.Key);
-                    }
-                    else if (instruction == Routes.RouteType.R)
-                    {
-                        headingIndex++;
-                        if (headingIndex > headings.Max(mx => mx.Key))
-                            headingIndex = headings.Min(mn => mn.Key);
-                    }
-                    else if (instruction == Routes.RouteType.M)
-                    {
-                        rover.Coordinate.Heading = (Headings.HeadingType)headingIndex;
+                    if (instruction == MoveInstructions.MoveInstructionType.M)
                         Move(rover.Coordinate);
+                    else
+                    {
+                        if (instruction == MoveInstructions.MoveInstructionType.L)
+                            headingIndex--;
+                        else if (instruction == MoveInstructions.MoveInstructionType.R)
+                            headingIndex++;
+
+                        headingIndex = (headingIndex + headingLength) % headingLength;
+                        rover.Coordinate.Heading = (Headings.HeadingType)headingIndex;
                     }
                 }
             }
-
-            return rovers;
         }
     }
 }

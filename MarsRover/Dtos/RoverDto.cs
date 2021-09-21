@@ -1,12 +1,12 @@
 ﻿using static MarsRover.Const.Headings;
-using static MarsRover.Const.Routes;
+using static MarsRover.Const.MoveInstructions;
 
 namespace MarsRover.Dtos
 {
     public class RoverDto
     {
         public RoverCoordinateDto Coordinate { get; set; }
-        public RouteType[] ExplorationInstructions { get; set; }
+        public MoveInstructionType[] MoveInstructions { get; set; }
 
         public RoverDto()
         {

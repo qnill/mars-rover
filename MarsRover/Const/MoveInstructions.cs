@@ -2,9 +2,9 @@
 
 namespace MarsRover.Const
 {
-    public class Routes
+    public class MoveInstructions
     {
-        public enum RouteType : byte
+        public enum MoveInstructionType : byte
         {
             M = 1,
             L = 2,
@@ -13,7 +13,7 @@ namespace MarsRover.Const
 
         public static string[] ToArray()
         {
-            return Enum.GetNames(typeof(RouteType));
+            return Enum.GetNames(typeof(MoveInstructionType));
         }
     }
 }
