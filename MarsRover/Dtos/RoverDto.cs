@@ -5,8 +5,11 @@ namespace MarsRover.Dtos
 {
     public class RoverDto
     {
+        public int Id { get; set; }
         public RoverCoordinateDto Coordinate { get; set; }
         public MoveInstructionType[] MoveInstructions { get; set; }
+        public string Message { get; set; }
+        public bool Success { get; set; }
 
         public RoverDto()
         {
