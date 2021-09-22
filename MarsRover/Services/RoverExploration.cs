@@ -91,6 +91,9 @@ namespace MarsRover.Services
                 // When the move instructions comes, call move service with the new coordinate value.
                 foreach (var instruction in rover.MoveInstructions)
                 {
+                    if (!rover.Success)
+                        break;
+
                     if (instruction == MoveInstructions.MoveInstructionType.M)
                         Move(plateau, rover);
                     else

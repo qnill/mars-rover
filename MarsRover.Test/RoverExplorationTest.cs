@@ -89,5 +89,102 @@ namespace MarsRover.Test
             Assert.Equal(2, rover.Coordinate.Y);
             Assert.Equal(HeadingType.E, rover.Coordinate.Heading);
         }
+
+        [Fact]
+        public void Crash()
+        {
+            var plateau = new PlateauDto
+            {
+                UpperRightX = 5,
+                UpperRightY = 5
+            };
+
+            var roverOne = new RoverDto
+            {
+                Id = 1,
+                Coordinate = new RoverCoordinateDto
+                {
+                    X = 1,
+                    Y = 3,
+                    Heading = HeadingType.N
+                },
+                MoveInstructions = new MoveInstructionType[]
+                {
+                    MoveInstructionType.M,
+                    MoveInstructionType.M
+                },
+                Success = true
+            };
+            var roverTwo = new RoverDto
+            {
+                Id = 2,
+                Coordinate = new RoverCoordinateDto
+                {
+                    X = 2,
+                    Y = 4,
+                    Heading = HeadingType.S
+                },
+                MoveInstructions = new MoveInstructionType[]
+                {
+                    MoveInstructionType.M,
+                    MoveInstructionType.R,
+                    MoveInstructionType.M,
+                    MoveInstructionType.R,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M
+                },
+                Success = true
+            };
+            var roverThree = new RoverDto
+            {
+                Id = 3,
+                Coordinate = new RoverCoordinateDto
+                {
+                    X = 1,
+                    Y = 1,
+                    Heading = HeadingType.N
+                },
+                MoveInstructions = new MoveInstructionType[]
+                {
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.R,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.L,
+                    MoveInstructionType.L,
+                    MoveInstructionType.L,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M,
+                    MoveInstructionType.M
+                },
+                Success = true
+            };
+
+            RoverExploration.Discover(plateau, new List<RoverDto>() { roverOne, roverTwo, roverThree });
+
+            // RoverOne
+            Assert.Equal(1, roverOne.Coordinate.X);
+            Assert.Equal(5, roverOne.Coordinate.Y);
+            Assert.Equal(HeadingType.N, roverOne.Coordinate.Heading);
+
+            // RoverTwo
+            Assert.Equal(1, roverTwo.Coordinate.X);
+            Assert.Equal(4, roverTwo.Coordinate.Y);
+            Assert.Equal(HeadingType.N, roverTwo.Coordinate.Heading);
+
+            // RoverThree
+            Assert.Equal(1, roverThree.Coordinate.X);
+            Assert.Equal(3, roverThree.Coordinate.Y);
+            Assert.Equal(HeadingType.N, roverThree.Coordinate.Heading);
+        }
     }
 }
