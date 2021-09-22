@@ -23,9 +23,10 @@ namespace MarsRover.Services
             }
 
             // Checks the crash to another rover.
-            if (_rovers.Any(a => a.Coordinate.X == virtualX && a.Coordinate.Y == virtualY))
+            var obstacleRover = _rovers.Where(a => a.Coordinate.X == virtualX && a.Coordinate.Y == virtualY).Select(s => s.Id.ToString()).FirstOrDefault();
+            if (obstacleRover != null)
             {
-                rover.Message = string.Format(ResultMessages.RoverExploration.REE0002, $"{rover.Coordinate.X} {rover.Coordinate.Y} {rover.Coordinate.Heading}");
+                rover.Message = string.Format(ResultMessages.RoverExploration.REE0002, obstacleRover, $"{rover.Coordinate.X} {rover.Coordinate.Y} {rover.Coordinate.Heading}");
                 rover.Success = false;
                 return;
             }

@@ -66,7 +66,7 @@
             /// <summary>
             /// Rover could not move because another rover at the target coordinates. Final position: {0}.
             /// </summary>
-            internal const string REE0002 = "REE0002-Rover could not move because another rover at the target coordinates. Final position: {0}.";
+            internal const string REE0002 = "REE0002-Rover could not move because rover-{0} at the target coordinates. Final position: {1}.";
         }
     }
 }
