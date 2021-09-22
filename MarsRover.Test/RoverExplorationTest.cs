@@ -12,8 +12,14 @@ namespace MarsRover.Test
         [Fact]
         public void NewLocationIsCorrect()
         {
+            var plateau = new PlateauDto
+            {
+                UpperRightX = 5,
+                UpperRightY = 5
+            };
             var rover = new RoverDto
             {
+                Id = 1,
                 Coordinate = new RoverCoordinateDto
                 {
                     X = 1,
@@ -31,10 +37,11 @@ namespace MarsRover.Test
                     MoveInstructionType.L,
                     MoveInstructionType.M,
                     MoveInstructionType.M
-                }
+                },
+                Success = true
             };
 
-            RoverExploration.Discover(new List<RoverDto>() { rover });
+            RoverExploration.Discover(plateau, new List<RoverDto>() { rover });
 
             Assert.Equal(1, rover.Coordinate.X);
             Assert.Equal(3, rover.Coordinate.Y);
@@ -44,8 +51,14 @@ namespace MarsRover.Test
         [Fact]
         public void DrawSquare()
         {
+            var plateau = new PlateauDto
+            {
+                UpperRightX = 20,
+                UpperRightY = 20
+            };
             var rover = new RoverDto
             {
+                Id = 1,
                 Coordinate = new RoverCoordinateDto
                 {
                     X = 3,
@@ -66,10 +79,11 @@ namespace MarsRover.Test
                     MoveInstructionType.M,
                     MoveInstructionType.M,
                     MoveInstructionType.L
-                }
+                },
+                Success = true
             };
 
-            RoverExploration.Discover(new List<RoverDto>() { rover });
+            RoverExploration.Discover(plateau, new List<RoverDto>() { rover });
 
             Assert.Equal(3, rover.Coordinate.X);
             Assert.Equal(2, rover.Coordinate.Y);
