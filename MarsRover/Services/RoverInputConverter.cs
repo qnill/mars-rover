@@ -100,17 +100,17 @@ namespace MarsRover.Services
                 };
 
                 (rover.Coordinate, rover.Message) = Coordinate(inputCoordinate);
-                if (rover.Message == null)
+                if (rover.Coordinate != null)
                 {
                     (rover.MoveInstructions, rover.Message) = MoveInstructions(inputMoveInstructions);
-
-                    // Checks if these coordinates are within the plateau.
-                    if (rover.Coordinate.X > plateau.UpperRightX || rover.Coordinate.Y > plateau.UpperRightY)
-                        rover.Message = ResultMessages.RoverInputConvert.RIE0006;
 
                     // Checks if there are any more rovers added to these coordinates.
                     if (rovers.Any(a => a.Coordinate.X == rover.Coordinate.X && a.Coordinate.Y == rover.Coordinate.Y))
                         rover.Message = ResultMessages.RoverInputConvert.RIE0007;
+
+                    // Checks if these coordinates are within the plateau.
+                    if (rover.Coordinate.X > plateau.UpperRightX || rover.Coordinate.Y > plateau.UpperRightY)
+                        rover.Message = ResultMessages.RoverInputConvert.RIE0006;
                 }
 
                 rover.Success = rover.Message == null;

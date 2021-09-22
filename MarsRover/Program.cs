@@ -43,7 +43,7 @@ namespace MarsRover
 
             Console.WriteLine("\n-----Result-----");
 
-            RoverExploration.Discover(rovers.Where(x => x.Success).ToList());
+            RoverExploration.Discover(plateau, rovers.Where(x => x.Success).ToList());
             foreach (var rover in rovers)
             {
                 string result;

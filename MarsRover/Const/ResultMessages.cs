@@ -36,9 +36,9 @@
             internal const string RIE0005 = "RIE0005-The move instruction could not find.";
 
             /// <summary>
-            /// The entered coordinates are outside of the range.
+            /// The entered coordinates are outside of the plateau.
             /// </summary>
-            internal const string RIE0006 = "RIE0006-The entered coordinates are outside of the range.";
+            internal const string RIE0006 = "RIE0006-The entered coordinates are outside of the plateau.";
 
             /// <summary>
             /// Another rover has already been added to this coordinates.
@@ -59,9 +59,9 @@
         internal static class RoverExploration
         {
             /// <summary>
-            /// The rover unable to move as it reaches the range. Final position: {0}.
+            /// The rover unable to move as it reaches the range of plateau. Final position: {0}.
             /// </summary>
-            internal const string REE0001 = "REE0001-The rover unable to move as it reaches the range. Final position: {0}.";
+            internal const string REE0001 = "REE0001-The rover unable to move as it reaches the range of plateau. Final position: {0}.";
 
             /// <summary>
             /// Rover could not move because another rover at the target coordinates. Final position: {0}.
